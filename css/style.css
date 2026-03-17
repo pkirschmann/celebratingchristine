@@ -303,6 +303,96 @@ body {
   color: #444;
 }
 
+/* ── Intro overlay ──────────────────────────────────────────────────── */
+#intro-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 400;
+}
+#intro-overlay.hidden { display: none; }
+
+#intro-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 40px 48px 32px;
+  text-align: center;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.25);
+  max-width: 420px;
+  width: 90%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+
+#intro-logo {
+  width: 72px;
+  height: 72px;
+  margin-bottom: 14px;
+}
+
+#intro-crossword-label {
+  font-family: var(--font-main);
+  font-size: 26px;
+  font-weight: 800;
+  color: #111;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+
+#intro-title {
+  font-family: var(--font-main);
+  font-size: 20px;
+  font-weight: 400;
+  color: #222;
+  font-style: italic;
+  margin-bottom: 28px;
+}
+
+#intro-prompt {
+  font-family: var(--font-main);
+  font-size: 20px;
+  font-weight: 400;
+  color: #111;
+  margin-bottom: 18px;
+}
+
+#intro-play-btn {
+  background: #111;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 14px 0;
+  width: 100%;
+  max-width: 240px;
+  font-size: 17px;
+  font-family: var(--font-main);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+  margin-bottom: 24px;
+}
+#intro-play-btn:hover { background: #333; }
+
+#intro-meta {
+  font-family: var(--font-main);
+  font-size: 13px;
+  color: #222;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#intro-date { font-weight: 700; }
+.intro-dot { color: #555; }
+#intro-credit { color: #222; }
+
 /* ── Completion modal ───────────────────────────────────────────────── */
 #modal-overlay {
   position: fixed;

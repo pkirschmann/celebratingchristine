@@ -337,6 +337,17 @@ body {
 }
 #modal-close:hover { background: #444; }
 
+/* ── Puzzle date ────────────────────────────────────────────────────── */
+#puzzle-date {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 300;
+  color: #999;
+  padding: 4px 0;
+  flex-shrink: 0;
+  background: var(--bg-page);
+}
+
 /* ── Mobile input (off-screen) ──────────────────────────────────────── */
 #mobile-input {
   position: fixed;

@@ -715,20 +715,8 @@ function launchBirthday() {
     <div class="bday-scene">
       <div class="confetti-wrap" id="confetti-wrap"></div>
       <div class="bday-msg">🎂 Happy Birthday, Christine! 🎂</div>
-      <div class="bday-sub">Turning 40 never looked so good</div>
-      <div class="cake">
-        <div class="cake-tier cake-top">
-          <div class="candles">
-            ${Array.from({length:5}, (_,i) => `
-              <div class="candle" style="--hue:${i*60}deg">
-                <div class="flame"><div class="flame-inner"></div></div>
-              </div>`).join('')}
-          </div>
-        </div>
-        <div class="cake-tier cake-mid"></div>
-        <div class="cake-tier cake-bot"></div>
-        <div class="cake-plate"></div>
-      </div>
+      <div class="bday-sub">Love, Peter</div>
+      <img class="bday-cake-gif" src="https://media0.giphy.com/media/TRlPpAV3UuIg0/giphy.gif" alt="Birthday cake">
       <div class="bday-time">${timeStr}</div>
       <div class="bday-hint">Click anywhere to dismiss</div>
     </div>`;

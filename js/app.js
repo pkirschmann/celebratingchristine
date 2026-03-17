@@ -641,7 +641,7 @@ function checkCompletion() {
   // All correct!
   state.isComplete = true;
   stopTimer();
-  showCompletionModal();
+  launchBirthday();
 }
 
 function showCompletionModal() {
@@ -688,6 +688,112 @@ function bindDropdowns() {
   document.addEventListener('click', () => {
     document.querySelectorAll('.dropdown-menu.open').forEach(m => m.classList.remove('open'));
   });
+}
+
+// ── Birthday celebration ──────────────────────────────────────────────────────
+function birthdayActive() {
+  return !!document.getElementById('birthday-overlay');
+}
+
+function clearBirthday() {
+  const el = document.getElementById('birthday-overlay');
+  if (el) el.remove();
+  stopBirthdayMusic();
+}
+
+function launchBirthday() {
+  if (birthdayActive()) return;
+
+  const s = state.timer.seconds;
+  const m = Math.floor(s / 60);
+  const ss = String(s % 60).padStart(2, '0');
+  const timeStr = `Solved in ${m}:${ss}`;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'birthday-overlay';
+  overlay.innerHTML = `
+    <div class="bday-scene">
+      <div class="confetti-wrap" id="confetti-wrap"></div>
+      <div class="bday-msg">🎂 Happy Birthday, Christine! 🎂</div>
+      <div class="bday-sub">Turning 40 never looked so good</div>
+      <div class="cake">
+        <div class="cake-tier cake-top">
+          <div class="candles">
+            ${Array.from({length:5}, (_,i) => `
+              <div class="candle" style="--hue:${i*60}deg">
+                <div class="flame"><div class="flame-inner"></div></div>
+              </div>`).join('')}
+          </div>
+        </div>
+        <div class="cake-tier cake-mid"></div>
+        <div class="cake-tier cake-bot"></div>
+        <div class="cake-plate"></div>
+      </div>
+      <div class="bday-time">${timeStr}</div>
+      <div class="bday-hint">Click anywhere to dismiss</div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  // Spawn confetti
+  const wrap = document.getElementById('confetti-wrap');
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetto';
+    c.style.cssText = `left:${Math.random()*100}%;animation-delay:${Math.random()*3}s;
+      animation-duration:${2+Math.random()*3}s;background:hsl(${Math.random()*360},90%,60%);
+      width:${6+Math.random()*8}px;height:${6+Math.random()*8}px;
+      border-radius:${Math.random()>.5?'50%':'2px'};`;
+    wrap.appendChild(c);
+  }
+
+  overlay.addEventListener('click', clearBirthday);
+  playBirthdayMusic();
+}
+
+// ── Happy Birthday via Web Audio ──────────────────────────────────────────────
+let bdayAudioCtx = null;
+const bdayTimeouts = [];
+
+function stopBirthdayMusic() {
+  bdayTimeouts.forEach(clearTimeout);
+  bdayTimeouts.length = 0;
+  if (bdayAudioCtx) { try { bdayAudioCtx.close(); } catch(e){} bdayAudioCtx = null; }
+}
+
+function playBirthdayMusic() {
+  stopBirthdayMusic();
+  bdayAudioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  const ctx = bdayAudioCtx;
+
+  // note frequencies
+  const N = { C4:261.63,D4:293.66,E4:329.63,F4:349.23,G4:392.00,
+               A4:440.00,Bb4:466.16,C5:523.25,F5:698.46 };
+
+  // Happy Birthday: [freq, beats]  (beat = 0.35s at this tempo)
+  const song = [
+    [N.C4,0.75],[N.C4,0.25],[N.D4,1],[N.C4,1],[N.F4,1],[N.E4,2],
+    [N.C4,0.75],[N.C4,0.25],[N.D4,1],[N.C4,1],[N.G4,1],[N.F4,2],
+    [N.C4,0.75],[N.C4,0.25],[N.C5,1],[N.A4,1],[N.F4,1],[N.E4,1],[N.D4,2],
+    [N.Bb4,0.75],[N.Bb4,0.25],[N.A4,1],[N.F4,1],[N.G4,1],[N.F4,2],
+  ];
+
+  const beat = 0.35;
+  let t = ctx.currentTime + 0.1;
+
+  for (const [freq, beats] of song) {
+    const dur = beats * beat;
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = 'triangle';
+    osc.frequency.value = freq;
+    gain.gain.setValueAtTime(0.4, t);
+    gain.gain.exponentialRampToValueAtTime(0.001, t + dur * 0.9);
+    osc.connect(gain);
+    gain.connect(ctx.destination);
+    osc.start(t);
+    osc.stop(t + dur);
+    t += dur;
+  }
 }
 
 // ── Run ───────────────────────────────────────────────────────────────────────
